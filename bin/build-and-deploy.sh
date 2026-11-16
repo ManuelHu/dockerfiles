@@ -7,13 +7,13 @@ function docker_cmd() {
 prefix="g4edge/pyg4ometry-"
 tag=$(date +%Y%m%d)
 
-images=(manylinux2014)
+images=(manylinux2014 manylinux_2_28)
 archs=(x86_64)
 
 for img in ${images[@]}; do
     cd $img
     for arch in ${archs[@]}; do
-        docker_cmd --build-arg IMAGE=$img --build-arg ARCH=$arch -t ${prefix}${img}_${arch}:$tag .
+        docker_cmd --build-arg IMAGE=$img --build-arg ARCH=$arch -f ../manylinux_common/Dockerfile -t ${prefix}${img}_${arch}:$tag .
         docker tag ${prefix}${img}_${arch}:{$tag,latest}
         docker push ${prefix}${img}_${arch}:$tag && docker push ${prefix}${img}_${arch}:latest
     done
