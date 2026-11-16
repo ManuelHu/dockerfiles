@@ -1,4 +1,4 @@
-ARG IMAGE="manylinux_2_28"
+ARG IMAGE="manylinux2014"
 ARG ARCH="x86_64"
 
 FROM quay.io/pypa/${IMAGE}_${ARCH}:latest
@@ -11,7 +11,7 @@ WORKDIR /root
 
 COPY . /root
 
-RUN sed -i '/tsflags=nodocs/d' /etc/yum.conf && \
+RUN sed -i --follow-symlinks '/tsflags=nodocs/d' /etc/yum.conf && \
     yum -y update && \
     yum -y groupinstall "Development Tools" && \
     yum -y install $(cat packages) && \

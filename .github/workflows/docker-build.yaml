@@ -10,9 +10,10 @@ jobs:
 
   build_images:
     strategy:
-        matrix:
-            image: [ubuntu, manylinux2014, manylinux_2_28]
-            platform: [x86_64]
+      matrix:
+        image: [ubuntu, manylinux2014, manylinux_2_28]
+        platform: [x86_64]
+      fail-fast: false
 
     name: Push ${{ matrix.image }} image
     runs-on: ubuntu-latest
@@ -39,7 +40,7 @@ jobs:
           IMAGE: ${{ matrix.image }}
           PLATFORM: ${{ matrix.platform }}
         run: |
-            if [[ "$IMAGE" =~ ^manylinux* ]]; then
+            if [[ "$IMAGE" =~ ^manylinux.* ]]; then
               echo "IMAGE_NAME=${IMAGE}_${PLATFORM}" >> $GITHUB_ENV
             else
               echo "IMAGE_NAME=${IMAGE}" >> $GITHUB_ENV
@@ -55,7 +56,10 @@ jobs:
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: ./${{ matrix.image }}/
-          file: ./${{ matrix.image }}/Dockerfile
+          file: ./${{ startsWith(matrix.image, 'manylinux') && 'manylinux_common' || matrix.image }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            IMAGE=${{ matrix.image }}
+            ARCH=${{ matrix.platform }}

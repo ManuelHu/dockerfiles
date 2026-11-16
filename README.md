@@ -15,9 +15,7 @@ available on [Docker Hub](https://hub.docker.com/r/g4edge).
 - `pyg4ometry` is based on the `ubuntu` image but includes pyg4ometry too
 - `manylinux2014` & `manylinux_2_28` are custom images for building pyg4ometry wheels,
   used in the pyg4ometry CI by the cbuildwheel action
-- Automated builds are configured on Docker Hub to build `manylinux2014` images
-  at every commit or pull request created in this repository (see
-  [Docker Hub](https://hub.docker.com/repository/docker/g4edge/manylinux2014_x86_64) >
-  Builds > Configure Automated Builds)
+- Automated builds are configured to build `manylinux2014` and `manylinux_2_28` images
+  at every commit or pull request created in this repository-
 - the `bin/build-and-deploy.sh` script can be used to build locally and push
   images to the Docker Hub
